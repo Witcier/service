@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')
-    ->namespace('Api/V1')
+    ->namespace('Api\V1')
     ->name('api.v1.')
     ->group(function() {
         Route::middleware('throttle:' . config('api.rate_limits.sign'))->group(function () {
-
+            Route::post('users', 'UsersController@store');
         });
 
         Route::middleware('throttle:' . config('api.rate_limits.access'))->group(function () {
