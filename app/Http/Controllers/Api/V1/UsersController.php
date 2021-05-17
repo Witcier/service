@@ -6,22 +6,22 @@ use App\Http\Requests\Api\V1\UserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Jiannei\Response\Laravel\Support\Facades\Response;
 
 class UsersController extends Controller
 {
-    public function store(UserRequest $request)
+    public function index()
     {
-        $user = new User([
-            'username' => $request->username,
-            'password' => $request->password,
-            'realname' => $request->realname,
-            'status' => $request->status,
-            'remark' => $request->remark,
-        ]);
+        $users = User::paginate(6);
 
-        $user->save();
+        return Response::success(new UserCollection($users));
+    }
+
+    public function store(UserRequest $request, UserService $userService)
+    {
+        $user = $userService->store($request->username, $request->password, $request->realname, $request->status, $request->remark);
 
         return Response::success(new UserResource($user));
     }

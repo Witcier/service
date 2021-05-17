@@ -20,6 +20,8 @@ Route::prefix('v1')
     ->group(function() {
         Route::middleware('throttle:' . config('api.rate_limits.sign'))->group(function () {
             Route::post('users', 'UsersController@store');
+
+            Route::get('users', 'UsersController@index');
         });
 
         Route::middleware('throttle:' . config('api.rate_limits.access'))->group(function () {
