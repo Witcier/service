@@ -22,6 +22,15 @@ Route::prefix('v1')
             Route::post('users', 'UsersController@store');
 
             Route::get('users', 'UsersController@index');
+
+            // 平台列表
+            Route::get('platforms', 'PlatformsController@index');
+            // 新增平台
+            Route::post('platforms', 'PlatformsController@store');
+            // 修改平台
+            Route::patch('platforms/{platform}', 'PlatformsController@udpate');
+            // 删除平台
+            Route::delete('platforms/{platform}', 'PlatformsController@destroy');
         });
 
         Route::middleware('throttle:' . config('api.rate_limits.access'))->group(function () {
