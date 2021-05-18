@@ -17,6 +17,7 @@ class GroupRequest extends FormRequest
                     'type' => 'required|integer',
                     'status' => 'required|boolean',
                     'rules' => [
+                        'required',
                         'array',
                         Rule::exists('rules', 'id')->whereIn('id', $this->rules),
                     ],
