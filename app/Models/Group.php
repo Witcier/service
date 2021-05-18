@@ -11,7 +11,6 @@ class Group extends Model
 
     protected $fillable = [
         'title',
-        'rules',
         'pid',
         'type',
         'remark',
@@ -21,4 +20,14 @@ class Group extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Group::class, 'parent_id');
+    }
 }

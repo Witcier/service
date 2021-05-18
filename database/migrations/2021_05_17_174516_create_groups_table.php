@@ -16,8 +16,8 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('title')->comment('用户组名');
-            $table->string('rules', 4000)->comment('规则');
-            $table->unsignedInteger('pid')->default(0)->comment('父级用户组id');
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('父级用户组id');
+            $table->foreign('parent_id')->references('id')->on('groups')->onDelete('cascade');
             $table->unsignedTinyInteger('type')->comment('分组类型 1普通 2主管 3开发');
             $table->string('remark')->nullable()->comment('备注');
             $table->boolean('status')->default(true)->comment('状态');

@@ -31,6 +31,15 @@ Route::prefix('v1')
             Route::patch('platforms/{platform}', 'PlatformsController@udpate');
             // 删除平台
             Route::delete('platforms/{platform}', 'PlatformsController@destroy');
+
+            // 权限规则列表
+            Route::get('rules', 'RulesController@index');
+            // 新增规则
+            Route::post('rules', 'RulesController@store');
+            // 获取某个规则
+            Route::get('rules/{rule}', 'RulesController@show');
+            // 修改规则
+            Route::patch('rules/{rule}', 'RulesController@update');
         });
 
         Route::middleware('throttle:' . config('api.rate_limits.access'))->group(function () {

@@ -18,14 +18,12 @@ class CreateServicesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('username')->comment('平台账号');
-            $table->string('alias')->nullable()->comment('别名');
             $table->string('nick')->nullable()->comment('昵称');
             $table->dateTime('birth')->nullable()->comment('生日');
             $table->string('email')->nullable()->comment('邮箱');
             $table->string('mobile')->nullable()->comment('电话');
             $table->boolean('sex')->nullable()->comment('性别');
             $table->string('photo')->default()->comment('头像');
-            $table->string('sign')->nullable()->comment('签名');
             $table->boolean('is_service')->default(true)->comment('是否为客服');
             $table->unsignedBigInteger('platform_id');
             $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('cascade');

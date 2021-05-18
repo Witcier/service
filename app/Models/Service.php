@@ -33,4 +33,8 @@ class Service extends Model
         'is_service' => 'boolean',
         'is_auto_reply' => 'boolean',
     ];
+
+    protected $dates = [
+        'birth'
+    ];
 }
