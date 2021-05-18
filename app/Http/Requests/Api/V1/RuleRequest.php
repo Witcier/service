@@ -11,6 +11,7 @@ class RuleRequest extends FormRequest
                 return [
                     'title' => 'required|string',
                     'name' => 'required|string',
+                    'parent_id' => 'exists:rules,id',
                     'status' => 'required|boolean'
                 ];
                 break;
@@ -19,6 +20,7 @@ class RuleRequest extends FormRequest
                 return [
                     'title' => 'string',
                     'name' => 'string',
+                    'parent_id' => 'exists:rules,id',
                     'status' => 'boolean'
                 ];
                 break;

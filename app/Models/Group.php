@@ -30,4 +30,27 @@ class Group extends Model
     {
         return $this->hasMany(Group::class, 'parent_id');
     }
+
+    public function groupPermission()
+    {
+        return $this->belongsToMany(Rule::class, 'group_permissions')
+            ->withTimestamps()
+            ->orderBy('group_permissions.created_at', 'desc');
+    }
+
+    public function permissionAttach(Group $group, array $ruleIds)
+    {
+        $ruleIds = is_array($ruleIds) ? $ruleIds : [$ruleIds]; 
+        foreach ($ruleIds as $ruleId) {
+            $group->groupPermission()->attach($ruleId);
+        }
+    }
+    
+    public function permissionDetach(Group $group, array $ruleIds)
+    {
+        $ruleIds = is_array($ruleIds) ? $ruleIds : [$ruleIds]; 
+        foreach ($ruleIds as $ruleId) {
+            $group->groupPermission()->detach($ruleId);
+        }
+    }
 }

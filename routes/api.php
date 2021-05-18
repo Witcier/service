@@ -40,6 +40,13 @@ Route::prefix('v1')
             Route::get('rules/{rule}', 'RulesController@show');
             // 修改规则
             Route::patch('rules/{rule}', 'RulesController@update');
+
+            // 用户组列表
+            Route::get('groups', 'GroupsController@index');
+            // 新增用户组
+            Route::post('groups', 'GroupsController@store');
+            // 修改用户组
+            Route::patch('groups/{group}', 'GroupsController@update');
         });
 
         Route::middleware('throttle:' . config('api.rate_limits.access'))->group(function () {
