@@ -37,4 +37,9 @@ class Service extends Model
     protected $dates = [
         'birth'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

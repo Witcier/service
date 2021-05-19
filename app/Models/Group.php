@@ -31,7 +31,7 @@ class Group extends Model
         return $this->hasMany(Group::class, 'parent_id');
     }
 
-    public function groupPermission()
+    public function groupPermissions()
     {
         return $this->belongsToMany(Rule::class, 'group_permissions')
             ->withTimestamps()
@@ -42,7 +42,7 @@ class Group extends Model
     {
         $ruleIds = is_array($ruleIds) ? $ruleIds : [$ruleIds]; 
         foreach ($ruleIds as $ruleId) {
-            $group->groupPermission()->attach($ruleId);
+            $group->groupPermissions()->attach($ruleId);
         }
     }
     
@@ -50,7 +50,7 @@ class Group extends Model
     {
         $ruleIds = is_array($ruleIds) ? $ruleIds : [$ruleIds]; 
         foreach ($ruleIds as $ruleId) {
-            $group->groupPermission()->detach($ruleId);
+            $group->groupPermissions()->detach($ruleId);
         }
     }
 }

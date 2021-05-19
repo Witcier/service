@@ -12,7 +12,7 @@ class GroupsController extends Controller
 {
     public function index()
     {
-        $groups = Group::with('groupPermission')->paginate(10);
+        $groups = Group::with('groupPermissions')->paginate(10);
 
         return Response::success($groups);
     }
@@ -50,7 +50,7 @@ class GroupsController extends Controller
             $group->save();
             
             // 删除用户组之前的权限
-            $group->permissionDetach($group, collect($group->groupPermission)->pluck('id')->all());
+            $group->permissionDetach($group, collect($group->groupPermissions)->pluck('id')->all());
 
             // 重新生成用户组权限
             if ($ruleIds) {

@@ -32,6 +32,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'realname',
+        'platform_id',
         'remark',
         'status'
     ];
@@ -63,5 +64,33 @@ class User extends Authenticatable
                 $model->password = Hash::make($model->password);
             }
         });
+    }
+
+    public function service()
+    {
+        return $this->hasOne(Service::class);
+    }
+
+    public function userGroupPermissions()
+    {
+        return $this->belongsToMany(Group::class, 'user_group_permissions')
+            ->withTimestamps()
+            ->orderBy('user_group_permissions.created_at', 'desc');
+    }
+
+    public function groupAttach(User $user, array $groupIds)
+    {
+        $groupIds = is_array($groupIds) ? $groupIds : [$groupIds]; 
+        foreach ($groupIds as $groupId) {
+            $user->userGroupPermissions()->attach($groupId);
+        }
+    }
+    
+    public function groupDetach(User $user, array $groupIds)
+    {
+        $groupIds = is_array($groupIds) ? $groupIds : [$groupIds]; 
+        foreach ($groupIds as $groupId) {
+            $user->userGroupPermissions()->detach($groupId);
+        }
     }
 }
