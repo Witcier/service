@@ -30,7 +30,8 @@ class GroupsController extends Controller
             $group->save();
 
             if ($ruleIds) {
-                $group->permissionAttach($group, $ruleIds);
+                $ruleIds = is_array($ruleIds) ? $ruleIds : [$ruleIds];
+                $group->groupPermissions()->attach($ruleIds);
             }
         });
 
@@ -49,12 +50,12 @@ class GroupsController extends Controller
             $group->update($groupData);
             $group->save();
             
-            // 删除用户组之前的权限
-            $group->permissionDetach($group, collect($group->groupPermissions)->pluck('id')->all());
-
             // 重新生成用户组权限
             if ($ruleIds) {
-                $group->permissionAttach($group, $ruleIds);
+                // 删除用户组之前的权限
+                $group->groupPermissions()->detach();
+
+                $group->groupPermissions()->attach($ruleIds);
             }
         });
 

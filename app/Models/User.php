@@ -77,20 +77,4 @@ class User extends Authenticatable
             ->withTimestamps()
             ->orderBy('user_group_permissions.created_at', 'desc');
     }
-
-    public function groupAttach(User $user, array $groupIds)
-    {
-        $groupIds = is_array($groupIds) ? $groupIds : [$groupIds]; 
-        foreach ($groupIds as $groupId) {
-            $user->userGroupPermissions()->attach($groupId);
-        }
-    }
-    
-    public function groupDetach(User $user, array $groupIds)
-    {
-        $groupIds = is_array($groupIds) ? $groupIds : [$groupIds]; 
-        foreach ($groupIds as $groupId) {
-            $user->userGroupPermissions()->detach($groupId);
-        }
-    }
 }

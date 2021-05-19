@@ -25,7 +25,29 @@ class UserService
             $service->save();
 
             // 创建用户组的关联
-            $user->groupAttach($user, $groupIds);
+            $user->userGroupPermissions()->attach($groupIds);
         });
+    }
+
+    public function update(User $user, $userData, $groupIds)
+    {
+        // 更新用户数据
+        $user->update($userData);
+
+        // 更新客服信息
+        $user->service->update([
+            'username' => $user->username,
+            'nick' => $user->realname,
+            'platform_id' => $user->platform_id,
+        ]);
+
+        // 更新用户组
+        // 删除之前的用户组的关联
+        if (!empty($groupIds) && is_array($groupIds)) {
+            $user->userGroupPermissions()->detach();
+
+            // 更新用户组的关联
+            $user->userGroupPermissions()->attach($groupIds);
+        }
     }
 }

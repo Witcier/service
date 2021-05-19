@@ -21,11 +21,22 @@ class UsersController extends Controller
 
     public function store(UserRequest $request, UserService $userService)
     {
-        $user = $request->only(['username', 'password', 'realname', 'platform_id', 'status', 'remark']);
+        $user = $request->only(['username', 'password', 'realname', 'phone', 'platform_id', 'status', 'remark']);
 
         $groupIds = $request->groups;
 
         $userService->store($user, $groupIds);
+
+        return Response::success();
+    }
+
+    public function update(UserRequest $request, User $user, UserService $userService)
+    {
+        $userData = $request->only(['username', 'password', 'realname', 'phone', 'platform_id', 'status', 'remark']);
+        
+        $groupIds = $request->groups;
+
+        $userService->update($user, $userData, $groupIds);
 
         return Response::success();
     }
