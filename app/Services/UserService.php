@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Service;
 use App\Models\User;
+use Jiannei\Response\Laravel\Support\Facades\Response;
 
 class UserService
 {
@@ -42,8 +43,8 @@ class UserService
         ]);
 
         // 更新用户组
-        // 删除之前的用户组的关联
         if (!empty($groupIds) && is_array($groupIds)) {
+            // 删除之前的用户组的关联
             $user->userGroupPermissions()->detach();
 
             // 更新用户组的关联

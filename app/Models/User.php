@@ -77,4 +77,18 @@ class User extends Authenticatable
             ->withTimestamps()
             ->orderBy('user_group_permissions.created_at', 'desc');
     }
+
+    public function getAllPermissions()
+    {
+        $permissions = $this->userGroupPermissions->load('groupPermissions');
+        $route = [];
+
+        foreach ($permissions as $permission) {
+            foreach ($permission->groupPermissions as $groupPermission) {
+                $route[] = $groupPermission->name;
+            }           
+        }
+
+        return $route = array_unique($route);
+    }
 }
