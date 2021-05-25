@@ -18,7 +18,7 @@ Route::prefix('v1')
     ->namespace('Api\V1')
     ->name('api.v1.')
     ->group(function() {
-        Route::middleware('throttle:' . config('api.rate_limits.sign'))->group(function () {
+        Route::middleware('throttle:' . config('api.rate_limits.sign', 'permission'))->group(function () {
             // 平台列表
             Route::get('platforms', 'PlatformsController@index');
             // 新增平台
@@ -49,7 +49,7 @@ Route::prefix('v1')
             // 新增用户
             Route::post('users', 'UsersController@store');
             // 修改用户
-            Route::patch('users/{user}', 'UsersController@update');
+            Route::patch('users/{user}', 'UsersController@update')->name('users.update');
         });
 
         Route::middleware('throttle:' . config('api.rate_limits.access'))->group(function () {

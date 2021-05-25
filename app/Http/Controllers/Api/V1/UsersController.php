@@ -32,6 +32,7 @@ class UsersController extends Controller
 
     public function update(UserRequest $request, User $user, UserService $userService)
     {
+        return Response::success($request->route());
         $userData = $request->only(['username', 'password', 'realname', 'phone', 'platform_id', 'status', 'remark']);
         
         $groupIds = $request->groups;

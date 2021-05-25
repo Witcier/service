@@ -18,4 +18,26 @@ class Authenticate extends Middleware
             return route('login');
         }
     }
+
+    public static function shouldPassThrough($request)
+    {
+        $excepts = config('api.permission.except');
+        foreach ($excepts as $except) {
+            if ($request->routeIs($except) || $request->routeIs(api_route_name($except))) {
+                return true;
+            }
+
+            $except = api_base_path($except);
+
+            if ($except !== '/') {
+                $except = trim($except, '/');
+            }
+
+            if (match_request_path($except)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
