@@ -6,9 +6,11 @@ use Closure;
 use Illuminate\Http\Request;
 use Jiannei\Response\Laravel\Support\Facades\Response;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class Permission
 {
+    protected $middlewarePrefix = 'api';
     /**
      * Handle an incoming request.
      *
@@ -19,9 +21,16 @@ class Permission
     public function handle(Request $request, Closure $next)
     {
         $user = $request->user();
-        if ($user || $this->shouldPassThrough($request) || $this->checkRoutePermission($request)) {
+
+        if ($user || $this->shouldPassThrough($request)) {
             return $next($request);
         } else {
+            return Response::errorUnauthorized();
+        }
+
+        if (! $user->getAllPermissions()->first(function ($permission) use ($request) {
+            return $request->routeIs(api_route_name($permission));
+        })) {
             return Response::errorUnauthorized();
         }
         return $next($request);
@@ -56,27 +65,27 @@ class Permission
 
     protected function isApiRoute($request)
     {
-        return $request->routeIs(api_route_name('*'));
+        return $request->routeIs(api_route_name('/'));
     }
 
-    public function checkRoutePermission(Request $request)
-    {
-        if (! $middleware = collect($request->route()->middleware())->first(function ($middleware) {
-            return Str::startsWith($middleware, $this->middlewarePrefix);
-        })) {
-            return false;
-        }
+    // public function checkRoutePermission(Request $request)
+    // {
+    //     if (! $middleware = collect($request->route()->middleware())->first(function ($middleware) {
+    //         return Str::startsWith($middleware, $this->middlewarePrefix);
+    //     })) {
+    //         return false;
+    //     }
 
-        $args = explode(',', str_replace($this->middlewarePrefix, '', $middleware));
+    //     $args = explode(',', str_replace($this->middlewarePrefix, '', $middleware));
 
-        $method = array_shift($args);
+    //     $method = array_shift($args);
 
-        if (! method_exists(Checker::class, $method)) {
-            throw new RuntimeException("Invalid permission method [$method].");
-        }
+    //     if (! method_exists(Checker::class, $method)) {
+    //         throw new RuntimeException("Invalid permission method [$method].");
+    //     }
 
-        call_user_func_array([Checker::class, $method], [$args]);
+    //     call_user_func_array([Checker::class, $method], [$args]);
 
-        return true;
-    }
+    //     return true;
+    // }
 }

@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Jiannei\Response\Laravel\Support\Facades\Response;
 
 class UsersController extends Controller
@@ -32,7 +33,7 @@ class UsersController extends Controller
 
     public function update(UserRequest $request, User $user, UserService $userService)
     {
-        return Response::success($request->route());
+        return Response::success();
         $userData = $request->only(['username', 'password', 'realname', 'phone', 'platform_id', 'status', 'remark']);
         
         $groupIds = $request->groups;
