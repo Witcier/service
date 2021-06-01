@@ -78,17 +78,48 @@ class User extends Authenticatable
             ->orderBy('user_group_permissions.created_at', 'desc');
     }
 
-    public function getAllPermissions()
+    public function getUserPermissions()
     {
         $permissions = $this->userGroupPermissions->load('groupPermissions');
-        $permission_url = [];
+        $ruleIds = [];
 
         foreach ($permissions as $permission) {
             foreach ($permission->groupPermissions as $groupPermission) {
-                $permission_url[] = $groupPermission->permission_url;
+                $ruleIds[] = $groupPermission->id;
             }           
         }
 
-        return $permission_url = array_unique($permission_url);
+        $ruleIds = array_unique($ruleIds);
+
+        return $this->getPermissionUrl(Rule::whereIn('id', $ruleIds)->get());
+    }
+
+    public function getPermissionUrl($permission = null, $parentId = null, $preName = null) {
+        if (is_null($permission)) {
+            // 从数据库中一次性取出所有类目
+            $permission = Rule::all();
+        }
+
+        $all = $permission
+            // 从所有类目中挑选出父类目 ID 为 $parentId 的类目
+            ->where('parent_id', $parentId)
+            // 遍历这些类目，并用返回值构建一个新的集合
+            ->map(function (Rule $rule) use ($permission, $preName) {
+                $preName = $preName ? $preName . '/' . $rule->name : $rule->name;
+                if ($rule->level === 3) {
+                    $data = ['permission_url' => $preName];
+                }
+                
+                $data[] = $this->getPermissionUrl($permission, $rule->id, $preName);
+
+                return $data;
+            });
+
+        $result = [];
+        array_walk_recursive($all, function($value) use (&$result) {
+        array_push($result, $value);
+        });
+
+        return $result;
     }
 }
