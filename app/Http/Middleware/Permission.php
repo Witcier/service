@@ -25,13 +25,13 @@ class Permission
         if ($user || $this->shouldPassThrough($request)) {
             return $next($request);
         } else {
-            return Response::errorUnauthorized();
+            return Response::errorUnauthorized('You have no permission to access it');
         }
 
         if (! $user->getAllPermissions()->first(function ($permission) use ($request) {
             return $request->routeIs(api_route_name($permission));
         })) {
-            return Response::errorUnauthorized();
+            return Response::errorUnauthorized('You have no permission to access it');
         }
         return $next($request);
     }

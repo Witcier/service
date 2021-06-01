@@ -81,14 +81,14 @@ class User extends Authenticatable
     public function getAllPermissions()
     {
         $permissions = $this->userGroupPermissions->load('groupPermissions');
-        $route = [];
+        $permission_url = [];
 
         foreach ($permissions as $permission) {
             foreach ($permission->groupPermissions as $groupPermission) {
-                $route[] = $groupPermission->name;
+                $permission_url[] = $groupPermission->permission_url;
             }           
         }
 
-        return $route = array_unique($route);
+        return $permission_url = array_unique($permission_url);
     }
 }
